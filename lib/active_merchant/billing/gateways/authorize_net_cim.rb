@@ -342,9 +342,21 @@ module ActiveMerchant #:nodoc:
       private
 
       def expdate(credit_card)
+        expdate_is_masked?(credit_card) ? masked_expdate : unmasked_expdate(credit_card)
+      end
+
+      def unmasked_expdate(credit_card)
         sprintf('%04d-%02d', credit_card.year, credit_card.month)
       end
-      
+
+      def masked_expdate
+        "XXXXXX"
+      end
+
+      def expdate_is_masked?(credit_card)
+        credit_card.year == 'XXXX' && credit_card.month == 'XX'
+      end
+
       def build_request(action, options = {})
         unless CIM_ACTIONS.include?(action)
           raise StandardError, "Invalid Customer Information Manager Action: #{action}"

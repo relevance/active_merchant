@@ -47,7 +47,19 @@ class AuthorizeNetCimTest < Test::Unit::TestCase
     assert_equal '2009-09', @gateway.send(:expdate, credit_card('4111111111111111', :month => "9", :year => "2009"))
     assert_equal '2013-11', @gateway.send(:expdate, credit_card('4111111111111111', :month => "11", :year => "2013"))
   end
-  
+
+  def test_masked_expdate_formatting
+    assert_equal 'XXXXXX', @gateway.send(:expdate, credit_card('4111111111111111', :month => "XX", :year => "XXXX"))
+  end
+
+  def test_expdate_is_masked
+    assert @gateway.send(:expdate_is_masked?, credit_card('4111111111111111', :month => "XX", :year => "XXXX"))
+  end
+
+  def test_expdate_is_not_masked
+    assert !@gateway.send(:expdate_is_masked?, credit_card('4111111111111111', :month => "9", :year => "2009"))
+  end
+
   def test_should_create_customer_profile_request
     @gateway.expects(:ssl_post).returns(successful_create_customer_profile_response)
 
