@@ -50,10 +50,12 @@ class AuthorizeNetCimTest < Test::Unit::TestCase
 
   def test_masked_expdate_formatting
     assert_equal 'XXXXXX', @gateway.send(:expdate, credit_card('4111111111111111', :month => "XX", :year => "XXXX"))
+    assert_equal 'XXXX', @gateway.send(:expdate, credit_card('4111111111111111', :month => "XX", :year => "XX"))
   end
 
   def test_expdate_is_masked
     assert @gateway.send(:expdate_is_masked?, credit_card('4111111111111111', :month => "XX", :year => "XXXX"))
+    assert @gateway.send(:expdate_is_masked?, credit_card('4111111111111111', :month => "XX", :year => "XX"))
   end
 
   def test_expdate_is_not_masked
